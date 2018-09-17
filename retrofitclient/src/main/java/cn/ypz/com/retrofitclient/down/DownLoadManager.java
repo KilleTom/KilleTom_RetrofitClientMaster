@@ -47,7 +47,6 @@ public class DownLoadManager {
         else if (contentTYpe == null) return false;
         return type.equals(contentTYpe);
     }
-    /*https://mac-installer.github.com/mac/GitHub%20Desktop%20220.zip*/
 
     public boolean isFinshWrittingtoDisk(FileBaseResponseBody fileBaseResponseBody) {
         contentTYpe = fileBaseResponseBody.contentType().toString();
