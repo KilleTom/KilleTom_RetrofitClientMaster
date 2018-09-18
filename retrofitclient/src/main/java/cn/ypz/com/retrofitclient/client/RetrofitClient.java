@@ -47,7 +47,7 @@ public class RetrofitClient {
         okHttpBuilder.retryOnConnectionFailure(true);
         builder = new Retrofit.Builder();
         baseUrl = "http:www.baidu.cpm";
-        builder=builder.
+        builder = builder.
                 addCallAdapterFactory(RxJavaCallAdapterFactory.create()).
                 addConverterFactory(GsonConverterFactory.create()).
                 baseUrl(baseUrl);
@@ -66,7 +66,8 @@ public class RetrofitClient {
     public void initRetrofit(Context appApplicationContext) {
         builder.client(okHttpBuilder.build());
         retrofit = builder.build();
-        context = appApplicationContext;
+        if (context == null)
+            context = appApplicationContext;
     }
 
     /*
@@ -84,9 +85,10 @@ public class RetrofitClient {
         return this;
     }
 
-    /**/
+    /**
+     * 日志显示级 新建log拦截器
+     */
     protected void setHttpLoggingInterceptor() {
-        //日志显示级 新建log拦截器
         addInterceptor(new HttpLoggingInterceptor(message -> Log.d(retrofitClientLogTag, "Retrofit====Message:" + message)).setLevel(HttpLoggingInterceptor.Level.BODY));
     }
 
@@ -120,6 +122,7 @@ public class RetrofitClient {
         this.baseUrl = baseUrl;
         builder.baseUrl(baseUrl);
         if (retrofit != null) retrofit = builder.build();
+
         return this;
     }
 
@@ -219,11 +222,14 @@ public class RetrofitClient {
         return baseSubscription(observable, Schedulers.io(), Schedulers.io(), AndroidSchedulers.mainThread(), subscriber);
     }
 
-    public  boolean isNetworkConnected() {
-        if (context==null) return false;
+    public Subscription easliyDownLoadSubscription(Observable observable, Subscriber subscriber) {
+        return observable.subscribeOn(Schedulers.io()).subscribeOn(Schedulers.io()).onBackpressureBuffer().unsubscribeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
+    }
+
+    public boolean isNetworkConnected() {
+        if (context == null) return false;
         ConnectivityManager connectMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectMgr.getActiveNetworkInfo();
-
         return null != networkInfo && networkInfo.isAvailable();
     }
 

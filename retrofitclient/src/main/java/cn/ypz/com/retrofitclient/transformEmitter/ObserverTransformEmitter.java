@@ -1,4 +1,4 @@
-package cn.ypz.com.retrofitclient;
+package cn.ypz.com.retrofitclient.transformEmitter;
 
 import android.util.Log;
 
@@ -15,7 +15,6 @@ public abstract class ObserverTransformEmitter<T, e extends RetrofitClientBaeApi
     @Override
     public void onNext(T value) {
         call(value);
-
     }
 
     @Override

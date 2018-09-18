@@ -1,4 +1,4 @@
-package cn.ypz.com.retrofitclient.down;
+package cn.ypz.com.retrofitclient.downLoad;
 
 public interface FileDowanloadProgress {
 

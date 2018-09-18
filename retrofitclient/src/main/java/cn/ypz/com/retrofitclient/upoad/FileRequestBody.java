@@ -1,6 +1,4 @@
-package cn.ypz.com.retrofitclient.upload;
-
-import android.support.annotation.Nullable;
+package cn.ypz.com.retrofitclient.upoad;
 
 import java.io.IOException;
 
@@ -12,7 +10,6 @@ import okio.ForwardingSink;
 import okio.Okio;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 public class FileRequestBody extends RequestBody {
     private final RequestBody requestBody;
@@ -24,7 +21,6 @@ public class FileRequestBody extends RequestBody {
         this.fileUploadProgress = fileUploadProgress;
     }
 
-    @Nullable
     @Override
     public MediaType contentType() {
         return requestBody.contentType();
@@ -52,17 +48,12 @@ public class FileRequestBody extends RequestBody {
                     if (totalBytesCount == 0) {
                         totalBytesCount = contentLength();
                     }
-                    Observable.just(writtenBytesCount).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>() {
-                        @Override
-                        public void call(Long aLong) {
-                            fileUploadProgress.uploadProgress(writtenBytesCount, totalBytesCount);
-                        }
-                    });
+                    Observable.just(writtenBytesCount).observeOn(AndroidSchedulers.mainThread()).subscribe(aLong -> fileUploadProgress.uploadProgress(writtenBytesCount, totalBytesCount));
 
                 }
             });
         }
-        requestBody.writeTo((BufferedSink) bufferSink);
+        requestBody.writeTo(bufferSink);
         //必须调用flush，否则最后一部分数据可能不会被写入
         bufferSink.flush();
     }

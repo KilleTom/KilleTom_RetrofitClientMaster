@@ -1,5 +1,7 @@
 package cn.ypz.com.retrofitclientmaster;
 
+import android.support.annotation.FloatRange;
+
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -8,8 +10,12 @@ import rx.Observable;
 
 public interface Test {
 
-    Observable<NewsResult> getNews(@Query("key")String key);
+    @GET("index")
+    Observable<NewsResult> getNews(@Query("type") String type, @Query("key") String key);
 
     @GET("KilleTomRxMaterialDesignUtil/archive/master.zip")
     Observable<ResponseBody> getFile(@Header("Accept-Encoding")String header);
+
+    @GET("KilleTomRxMaterialDesignUtil/archive/master.zip")
+    Observable<ResponseBody> getFile(@Header("Accept-Encoding")String header, @FloatRange float f);
 }

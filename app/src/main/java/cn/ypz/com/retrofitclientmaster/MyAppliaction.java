@@ -19,18 +19,6 @@ public class MyAppliaction extends Application {
                 setRetrofitClientLog(true, "").
                 setOkHttpConnectTimeOut(10, TimeUnit.SECONDS).
                 initRetrofit(getApplicationContext());
-        Test test = RetrofitClient.getmInstance().create(Test.class);
-      /*  RetrofitClient.getmInstance().
-                easliySubscription(test.getNews(""), new ObserverTransformEmitter<NewsResult,RetrofitClientBaeApiException>() {
-                    @Override
-                    public void call(NewsResult o) {
-
-                    }
-
-                    @Override
-                    public void failed(int retCode, String msg) {
-
-                    }
-                });*/
+       /* Test test = RetrofitClient.getmInstance().create(Test.class);*/
     }
 }
