@@ -35,11 +35,27 @@ public class RxApiSubscriptionManger implements RxClientActionManger<Object> {
     @Override
     public void cancel(Object tag) {
         if (!apiMapIsEmpty()) {
-            if (apiMap.get(tag) != null)
-                if (!apiMap.get(tag).isUnsubscribed())
+            if (apiMap.get(tag) != null) {
+                if (!apiMap.get(tag).isUnsubscribed()) {
                     apiMap.get(tag).unsubscribe();
+                }
+                remove(tag);
+            }
         }
     }
+
+    @Override
+    public void cancelDownLoad(Object tag) {
+        if (!apiMapIsEmpty()) {
+            if (apiMap.get(tag) != null) {
+                if (!apiMap.get(tag).isUnsubscribed()) {
+                    apiMap.get(tag).unsubscribe();
+                }
+                remove(tag);
+            }
+        }
+    }
+
 
     @Override
     public void cancelAll() {

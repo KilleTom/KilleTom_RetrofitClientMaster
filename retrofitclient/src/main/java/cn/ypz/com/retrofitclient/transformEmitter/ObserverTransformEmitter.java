@@ -10,7 +10,9 @@ import cn.ypz.com.retrofitclient.client.RetrofitClient;
 import cn.ypz.com.retrofitclient.retrofitClientException.RetrofitClientBaeApiException;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
-
+/**
+ * @author 易庞宙 killeTom
+ * */
 public abstract class ObserverTransformEmitter<T, e extends RetrofitClientBaeApiException> extends Subscriber<T> {
     @Override
     public void onNext(T value) {
@@ -24,7 +26,7 @@ public abstract class ObserverTransformEmitter<T, e extends RetrofitClientBaeApi
         } else if (RetrofitClient.getmInstance().isNetworkConnected()) {
             failed(0, "网络未连接,请打开网络");
         } else if (error instanceof UnknownHostException) {
-            failed(1, "您的网络不太给力，请稍后再试");
+            failed(error.hashCode(), "您的网络不太给力，请稍后再试");
         } else if (error instanceof SocketTimeoutException) {
             failed(1, "您的网络不太给力，请稍后再试");
         } else if (error instanceof ConnectException) {

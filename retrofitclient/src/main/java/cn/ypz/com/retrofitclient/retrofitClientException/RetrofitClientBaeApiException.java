@@ -1,6 +1,6 @@
 package cn.ypz.com.retrofitclient.retrofitClientException;
 
-public class RetrofitClientBaeApiException extends Exception{
+public abstract class RetrofitClientBaeApiException extends Exception{
 
     public int retCode;
     public String message;

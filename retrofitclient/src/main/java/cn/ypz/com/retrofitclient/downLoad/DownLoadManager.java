@@ -7,6 +7,7 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Objects;
 
 import okio.BufferedSink;
 import okio.Okio;
@@ -16,7 +17,8 @@ public class DownLoadManager {
 
     public static final String APK = "application/vnd.android.package-archive";
     public static final String PDF = "application/pdf";
-    public static final String ZIP = "application/zip, application/x-compressed-zip";
+    public static final String ZIP_0 = "application/zip";
+    public static final String ZIP_1 = "application/x-compressed-zip";
     public static final String PNG = "image/png";
     public static final String JPEG = "image/jpeg";
     public static final String JPG = "image/jpg";
@@ -29,7 +31,13 @@ public class DownLoadManager {
     protected String downFilePath;
     protected Context context;
     protected boolean isDebugLog;
+    protected boolean isRange;
     protected String logTag;
+
+    public DownLoadManager(String fileName, String downFilePath, Context context, boolean isDebugLog, String logTag, boolean isRange) {
+        this(fileName, downFilePath, context, isDebugLog, logTag);
+        this.isRange = isRange;
+    }
 
     public DownLoadManager(String fileName, String downFilePath, Context context, boolean isDebugLog, String logTag) {
         this.fileName = fileName;
@@ -43,42 +51,46 @@ public class DownLoadManager {
         boolean isEmpaty = TextUtils.isEmpty(contentTYpe);
         if (!isEmpaty) return type.equals(contentTYpe);
         if (fileBaseResponseBody == null && contentTYpe == null) return false;
-        else if (isEmpaty) contentTYpe = fileBaseResponseBody.contentType().toString();
-        else if (contentTYpe == null) return false;
-        return type.equals(contentTYpe);
+        else {
+            assert fileBaseResponseBody != null;
+            contentTYpe = Objects.requireNonNull(fileBaseResponseBody.contentType()).toString();
+        }
+        return contentTYpe != null && type.equals(contentTYpe);
     }
 
-    public boolean isFinshWrittingtoDisk(FileBaseResponseBody fileBaseResponseBody) {
+    public boolean isFinshWittingDisk(FileBaseResponseBody fileBaseResponseBody) {
         contentTYpe = fileBaseResponseBody.contentType().toString();
         this.fileBaseResponseBody = fileBaseResponseBody;
         if (TextUtils.isEmpty(contentTYpe)) {
             notEmptyContentType(fileBaseResponseBody);
         } else {
-            if (typeMatchers(APK)) apkDownLoadManager();
+            if (isRange) rangeDownLoadManager();
+            else if (typeMatchers(APK)) apkDownLoadManager();
             else if (typeMatchers(PDF)) pdfDownLoadManager();
-            else if (typeMatchers(ZIP)) zipDownLoadManager();
+            else if (typeMatchers(ZIP_0) || typeMatchers(ZIP_1)) zipDownLoadManager();
             else if (typeMatchers(PNG)) pngDownLoadManager();
             else if (typeMatchers(JPEG) || typeMatchers(JPG)) jpegDownLoadManager();
             else if (typeMatchers(GIF)) gifDownLoadManager();
             else if (typeMatchers(HTML)) htmlDownLoadManger();
             else if (typeMatchers(JS)) jsDownLoadManger();
-            else stearmDownloadType();
+            else steamDownloadType();
         }
         File file = new File(downFilePath);
         if (!file.exists()) file.mkdir();
-        File downlanFile = new File(downFilePath+"/"+fileName);
-        Log.i("ypz",downlanFile.getAbsolutePath());
         if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-               logD("创建文件异常");
+                logD("创建文件异常");
             }
         }
+        File downlandFile = new File(downFilePath + "/" + fileName);
+        Log.i("ypz", downlandFile.getAbsolutePath());
         Sink fileSink = null;
         BufferedSink fileBufferedSink = null;
         try {
-            fileSink = Okio.sink(downlanFile);
+            if (isRange && downlandFile.length() > 0) fileSink = Okio.appendingSink(downlandFile);
+            else fileSink = Okio.sink(downlandFile);
             fileBufferedSink = Okio.buffer(fileSink);
             fileBufferedSink.writeAll(fileBaseResponseBody.source());
         } catch (FileNotFoundException e) {
@@ -107,6 +119,11 @@ public class DownLoadManager {
         return true;
     }
 
+
+    protected void rangeDownLoadManager() {
+
+    }
+
     private void logD(String message, Exception e) {
         if (isDebugLog) {
             logD(message);
@@ -130,7 +147,7 @@ public class DownLoadManager {
         checkSaveFileType(".gif");
     }
 
-    protected void stearmDownloadType() {
+    protected void steamDownloadType() {
 
     }
 

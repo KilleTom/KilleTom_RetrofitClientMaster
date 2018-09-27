@@ -10,6 +10,8 @@ interface RxClientActionManger<T> {
 
     void cancel(T tag);
 
+    void cancelDownLoad(T tag);
+
     void cancelAll();
 
     void removeAll();

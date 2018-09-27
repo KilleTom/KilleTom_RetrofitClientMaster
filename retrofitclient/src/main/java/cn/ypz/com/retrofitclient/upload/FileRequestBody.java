@@ -1,4 +1,4 @@
-package cn.ypz.com.retrofitclient.upoad;
+package cn.ypz.com.retrofitclient.upload;
 
 import java.io.IOException;
 

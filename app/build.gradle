@@ -32,6 +32,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    buildToolsVersion '28.0.2'
 }
 
 dependencies {
@@ -53,5 +54,5 @@ dependencies {
     implementation 'io.reactivex:rxjava:1.2.1'
     implementation 'io.reactivex:rxandroid:1.2.1'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile project(path: ':retrofitclient')
+    implementation project(path: ':retrofitclient')
 }
